@@ -1,5 +1,5 @@
 // test
-const { execSync, spawn } = require('child_process');
+const { execFileSync, spawn } = require('child_process');
 const { existsSync } = require('fs');
 const { EOL } = require('os');
 const path = require('path');
@@ -245,7 +245,7 @@ const pkg = getPackageJson();
     // important for further usage of the package.json version
     await runInWorkspace('npm', ['version', '--allow-same-version=true', '--git-tag-version=false', current]);
     console.log('current 1:', current, '/', 'version:', version);
-    let newVersion = parseNpmVersionOutput(execSync(`npm version --git-tag-version=false ${version} --silent`).toString());
+    let newVersion = parseNpmVersionOutput(execFileSync('npm', ['version', '--git-tag-version=false', ...version.split(' '), '--silent']).toString());
     console.log('newVersion 1:', newVersion);
     newVersion = `${tagPrefix}${newVersion}${tagSuffix}`;
     if (process.env['INPUT_SKIP-COMMIT'] !== 'true') {
@@ -261,19 +261,13 @@ const pkg = getPackageJson();
     await runInWorkspace('npm', ['version', '--allow-same-version=true', '--git-tag-version=false', current]);
     console.log('current 2:', current, '/', 'version:', version);
     console.log('execute npm version now with the new version:', version);
-    newVersion = parseNpmVersionOutput(execSync(`npm version --git-tag-version=false ${version} --silent`).toString());
+    newVersion = parseNpmVersionOutput(execFileSync('npm', ['version', '--git-tag-version=false', ...version.split(' '), '--silent']).toString());
 
     newVersion = newVersion.split(/\n/)[1] || newVersion;
     console.log('newVersion 2:', newVersion);
     newVersion = `${tagPrefix}${newVersion}${tagSuffix}`;
     console.log(`newVersion after merging tagPrefix+newVersion+tagSuffix: ${newVersion}`);
-    // Using sh as command instead of directly echo to be able to use file redirection
-    try {
-      await runInWorkspace('sh', ['-c', `echo "newTag=${newVersion}" >> $GITHUB_OUTPUT`]);
-    } catch {
-      // for runner < 2.297.0
-      console.log(`::set-output name=newTag::${newVersion}`);
-    }
+    core.setOutput('newTag', newVersion);
     try {
       // to support "actions/checkout@v1"
       if (process.env['INPUT_SKIP-COMMIT'] !== 'true') {

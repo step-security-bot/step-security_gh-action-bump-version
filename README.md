@@ -5,13 +5,12 @@
 GitHub Action for automated npm version bump.
 
 This Action bumps the version in package.json and pushes it back to the repo.
-It is meant to be used on every successful merge to master but
-you'll need to configure that workflow yourself. You can look to the
-[`.github/workflows/push.yml`](./.github/workflows/push.yml) file in this project as an example.
+It is meant to be used on every successful merge to main but
+you'll need to configure that workflow yourself.
 
 **Attention**
 
-Make sure you use the `actions/checkout@v7` (or later) action!
+Make sure you use the `actions/checkout@v2` (or later) action!
 
 **Private repos**
 
@@ -25,16 +24,6 @@ jobs:
     ...
     permissions:
       contents: write
-```
-
-**Migration: Version v9 and up**
-
-Remove the 'actions/setup-node@v1' step from your action.yml file
-```
-      - name: 'Setup Node.js'
-        uses: 'actions/setup-node@v1'
-        with:
-          node-version: 16
 ```
 
 ⚠️ **Windows** is not fully supported.

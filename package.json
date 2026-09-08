@@ -7,7 +7,7 @@
   },
   "keywords": [],
   "author": "step-security",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/step-security/gh-action-bump-version/issues"
   },
@@ -16,7 +16,6 @@
   "main": "index.js",
   "scripts": {
     "build": "ncc build index.js -o dist --license licenses.txt",
-    "start": "node ./index.js",
     "test": "npm run end-to-end-test",
     "end-to-end-test": "jest --roots=tests/end-to-end --testTimeout=300000 --runInBand"
   },
